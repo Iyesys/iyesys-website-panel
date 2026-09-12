@@ -7,6 +7,7 @@ import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Bold, Italic, Heading2, List, ListOrdered, Quote, ImageIcon, LinkIcon, Check, X } from 'lucide-react'
+import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 
 function uploadPath(file: File) {
@@ -86,7 +87,7 @@ export default function ArticleEditor({
 
       const { error } = await supabase.storage.from('article-images').upload(path, file)
       if (error) {
-        alert(`Görsel yüklenemedi: ${error.message}`)
+        toast.error(`Görsel yüklenemedi: ${error.message}`)
         return
       }
 
@@ -141,7 +142,7 @@ export default function ArticleEditor({
 
             const { from, to } = editor.state.selection
             if (from === to) {
-              alert('Lütfen önce bağlantı eklemek istediğiniz metni seçin.')
+              toast.error('Lütfen önce bağlantı eklemek istediğiniz metni seçin.')
               return
             }
 
@@ -222,6 +223,7 @@ function ToolbarButton({
   return (
     <button
       type="button"
+      onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className={`rounded p-1.5 text-slate-600 hover:bg-slate-100 ${active ? 'bg-slate-200 text-slate-900' : ''}`}
     >
