@@ -3,8 +3,14 @@ import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { listArticles } from '@/lib/articles'
 import { signOut } from './actions'
+import ToastOnMount from '@/components/ToastOnMount'
 
-export default async function AdminHomePage() {
+export default async function AdminHomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ toast?: string }>
+}) {
+  const { toast } = await searchParams
   const supabase = await createClient()
   const {
     data: { user },
@@ -13,6 +19,7 @@ export default async function AdminHomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 px-6 py-10">
+      <ToastOnMount type={toast} />
       <div className="mx-auto max-w-3xl">
         <div className="flex items-center justify-between">
           <div>

@@ -24,7 +24,7 @@ export async function createArticleAction(formData: FormData) {
 
   await createArticle(input)
   revalidatePath('/admin')
-  redirect('/admin')
+  redirect(`/admin?toast=${input.status === 'published' ? 'published' : 'draft-created'}`)
 }
 
 export async function updateArticleAction(id: string, formData: FormData) {
@@ -37,11 +37,11 @@ export async function updateArticleAction(id: string, formData: FormData) {
   const existing = await getArticleById(id)
   await updateArticle(id, input, existing?.status === 'published')
   revalidatePath('/admin')
-  redirect('/admin')
+  redirect(`/admin?toast=${input.status === 'published' ? 'published' : 'updated'}`)
 }
 
 export async function deleteArticleAction(id: string) {
   await deleteArticle(id)
   revalidatePath('/admin')
-  redirect('/admin')
+  redirect('/admin?toast=deleted')
 }
