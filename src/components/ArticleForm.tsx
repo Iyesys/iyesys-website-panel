@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ImageIcon, X } from 'lucide-react'
 import ArticleEditor from './ArticleEditor'
+import SubmitButton from './SubmitButton'
 import { createClient } from '@/lib/supabase/client'
 import { slugify } from '@/lib/slugify'
 import type { Article } from '@/lib/articles'
@@ -138,13 +139,7 @@ export default function ArticleForm({
         </select>
       </div>
 
-      <button
-        type="submit"
-        disabled={coverUploading}
-        className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
-      >
-        Kaydet
-      </button>
+      <SubmitButton disabled={coverUploading} />
     </form>
   )
 }
