@@ -36,7 +36,7 @@ export default function ArticleEditor({
     extensions: [
       StarterKit,
       Image,
-      Link.configure({ openOnClick: false }),
+      Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
       Placeholder.configure({ placeholder: 'Yazınızı buraya yazın…' }),
     ],
     content,
