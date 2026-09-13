@@ -9,16 +9,18 @@ const MESSAGES: Record<string, string> = {
   'draft-created': 'Taslak kaydedildi.',
   updated: 'Makale güncellendi.',
   deleted: 'Makale silindi.',
+  'profile-updated': 'Profil güncellendi.',
+  'password-updated': 'Şifre güncellendi.',
 }
 
-export default function ToastOnMount({ type }: { type?: string }) {
+export default function ToastOnMount({ type, redirectTo = '/admin' }: { type?: string; redirectTo?: string }) {
   const router = useRouter()
 
   useEffect(() => {
     if (!type) return
     const message = MESSAGES[type]
     if (message) toast.success(message)
-    router.replace('/admin')
+    router.replace(redirectTo)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type])
 

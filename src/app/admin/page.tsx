@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Plus, Settings } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { listArticles } from '@/lib/articles'
 import { signOut } from './actions'
@@ -24,16 +24,27 @@ export default async function AdminHomePage({
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-slate-900">IYESYS Panel</h1>
-            <p className="mt-1 text-sm text-slate-500">Giriş yapan: {user?.email}</p>
+            <p className="mt-1 text-sm text-slate-500">
+              Giriş yapan: {user?.user_metadata?.full_name || user?.email}
+            </p>
           </div>
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
+          <div className="flex items-center gap-2">
+            <Link
+              href="/admin/settings"
+              className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
             >
-              Çıkış Yap
-            </button>
-          </form>
+              <Settings className="h-4 w-4" />
+              Ayarlar
+            </Link>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
+              >
+                Çıkış Yap
+              </button>
+            </form>
+          </div>
         </div>
 
         <div className="mt-8 flex items-center justify-between">
