@@ -1,4 +1,5 @@
 import { signIn } from './actions'
+import SubmitButton from '@/components/SubmitButton'
 
 export default async function LoginPage({
   searchParams,
@@ -48,12 +49,11 @@ export default async function LoginPage({
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
-          >
-            Giriş Yap
-          </button>
+          <SubmitButton
+            idleLabel="Giriş Yap"
+            pendingLabel="Giriş yapılıyor…"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+          />
         </form>
       </div>
     </div>
