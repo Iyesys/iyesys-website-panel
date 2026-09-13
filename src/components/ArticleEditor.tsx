@@ -1,12 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
-import { Bold, Italic, Heading2, List, ListOrdered, Quote, ImageIcon, LinkIcon, Check, X } from 'lucide-react'
+import { Bold, Italic, Heading2, List, ListOrdered, Quote, ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 
@@ -24,12 +24,6 @@ export default function ArticleEditor({
   onChange: (html: string) => void
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const linkPopoverRef = useRef<HTMLDivElement>(null)
-  const linkInputRef = useRef<HTMLInputElement>(null)
-
-  const [linkPopoverOpen, setLinkPopoverOpen] = useState(false)
-  const [linkUrl, setLinkUrl] = useState('')
-  const [savedSelection, setSavedSelection] = useState<{ from: number; to: number } | null>(null)
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -47,37 +41,6 @@ export default function ArticleEditor({
     },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   })
-
-  const closeLinkPopover = useCallback(() => {
-    setLinkPopoverOpen(false)
-    setLinkUrl('')
-    setSavedSelection(null)
-  }, [])
-
-  useEffect(() => {
-    if (!linkPopoverOpen) return
-    linkInputRef.current?.focus()
-
-    function handleClickOutside(e: MouseEvent) {
-      if (linkPopoverRef.current && !linkPopoverRef.current.contains(e.target as Node)) {
-        closeLinkPopover()
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [linkPopoverOpen, closeLinkPopover])
-
-  const applyLink = useCallback(() => {
-    if (!editor || !savedSelection || !linkUrl) return
-    editor
-      .chain()
-      .focus()
-      .setTextSelection(savedSelection)
-      .extendMarkRange('link')
-      .setLink({ href: linkUrl })
-      .run()
-    closeLinkPopover()
-  }, [editor, savedSelection, linkUrl, closeLinkPopover])
 
   const uploadImage = useCallback(
     async (file: File) => {
@@ -101,7 +64,7 @@ export default function ArticleEditor({
 
   return (
     <div className="rounded-md border border-slate-300 bg-white">
-      <div className="relative flex flex-wrap items-center gap-1 border-b border-slate-200 p-2">
+      <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 p-2">
         <ToolbarButton active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
           <Bold className="h-4 w-4" />
         </ToolbarButton>
@@ -132,26 +95,6 @@ export default function ArticleEditor({
         >
           <Quote className="h-4 w-4" />
         </ToolbarButton>
-        <ToolbarButton
-          active={editor.isActive('link')}
-          onClick={() => {
-            if (editor.isActive('link')) {
-              editor.chain().focus().unsetLink().run()
-              return
-            }
-
-            const { from, to } = editor.state.selection
-            if (from === to) {
-              toast.error('Lütfen önce bağlantı eklemek istediğiniz metni seçin.')
-              return
-            }
-
-            setSavedSelection({ from, to })
-            setLinkPopoverOpen(true)
-          }}
-        >
-          <LinkIcon className="h-4 w-4" />
-        </ToolbarButton>
         <ToolbarButton onClick={() => fileInputRef.current?.click()}>
           <ImageIcon className="h-4 w-4" />
         </ToolbarButton>
@@ -166,45 +109,6 @@ export default function ArticleEditor({
             e.target.value = ''
           }}
         />
-
-        {linkPopoverOpen && (
-          <div
-            ref={linkPopoverRef}
-            className="absolute left-2 top-full z-10 mt-1 flex items-center gap-1 rounded-md border border-slate-200 bg-white p-1.5 shadow-md"
-          >
-            <input
-              ref={linkInputRef}
-              type="url"
-              placeholder="https://..."
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  applyLink()
-                } else if (e.key === 'Escape') {
-                  closeLinkPopover()
-                }
-              }}
-              className="w-56 rounded border border-slate-300 px-2 py-1 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={applyLink}
-              disabled={!linkUrl}
-              className="rounded p-1 text-green-600 hover:bg-green-50 disabled:opacity-40"
-            >
-              <Check className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={closeLinkPopover}
-              className="rounded p-1 text-slate-400 hover:bg-slate-100"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        )}
       </div>
       <EditorContent editor={editor} />
     </div>
