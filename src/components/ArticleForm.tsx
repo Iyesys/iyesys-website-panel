@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { ImageIcon, X } from 'lucide-react'
+import { ImageIcon, X, Eye } from 'lucide-react'
+import { toast } from 'sonner'
 import ArticleEditor from './ArticleEditor'
+import ArticlePreview from './ArticlePreview'
 import SubmitButton from './SubmitButton'
 import { createClient } from '@/lib/supabase/client'
 import { slugify } from '@/lib/slugify'
@@ -24,6 +26,7 @@ export default function ArticleForm({
   const [coverUrl, setCoverUrl] = useState(article?.cover_image_url ?? '')
   const [coverUploading, setCoverUploading] = useState(false)
   const [contentHtml, setContentHtml] = useState(article?.content_html ?? '')
+  const [previewOpen, setPreviewOpen] = useState(false)
 
   async function handleCoverUpload(file: File) {
     setCoverUploading(true)
@@ -33,7 +36,7 @@ export default function ArticleForm({
 
     const { error } = await supabase.storage.from('article-images').upload(path, file)
     if (error) {
-      alert(`Kapak görseli yüklenemedi: ${error.message}`)
+      toast.error(`Kapak görseli yüklenemedi: ${error.message}`)
       setCoverUploading(false)
       return
     }
@@ -139,7 +142,27 @@ export default function ArticleForm({
         </select>
       </div>
 
-      <SubmitButton disabled={coverUploading} />
+      <div className="flex items-center gap-3">
+        <SubmitButton disabled={coverUploading} />
+        <button
+          type="button"
+          onClick={() => setPreviewOpen(true)}
+          className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+        >
+          <Eye className="h-4 w-4" />
+          Önizle
+        </button>
+      </div>
+
+      {previewOpen && (
+        <ArticlePreview
+          title={title}
+          coverUrl={coverUrl}
+          excerpt={excerpt}
+          contentHtml={contentHtml}
+          onClose={() => setPreviewOpen(false)}
+        />
+      )}
     </form>
   )
 }
