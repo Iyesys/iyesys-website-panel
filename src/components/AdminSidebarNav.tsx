@@ -2,19 +2,20 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Newspaper, Settings } from 'lucide-react'
+import { Newspaper, Settings, Users } from 'lucide-react'
 
-const NAV_ITEMS = [
-  { href: '/admin', label: 'Yazılar', icon: Newspaper },
-  { href: '/admin/settings', label: 'Ayarlar', icon: Settings },
-]
-
-export default function AdminSidebarNav() {
+export default function AdminSidebarNav({ showUsers }: { showUsers: boolean }) {
   const pathname = usePathname()
+
+  const navItems = [
+    { href: '/admin', label: 'Yazılar', icon: Newspaper },
+    ...(showUsers ? [{ href: '/admin/users', label: 'Kullanıcılar', icon: Users }] : []),
+    { href: '/admin/settings', label: 'Ayarlar', icon: Settings },
+  ]
 
   return (
     <nav className="flex-1 space-y-1 p-3">
-      {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+      {navItems.map(({ href, label, icon: Icon }) => {
         const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href)
         return (
           <Link

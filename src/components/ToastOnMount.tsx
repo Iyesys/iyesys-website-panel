@@ -11,6 +11,9 @@ const MESSAGES: Record<string, string> = {
   deleted: 'Makale silindi.',
   'profile-updated': 'Profil güncellendi.',
   'password-updated': 'Şifre güncellendi.',
+  'user-invited': 'Davet gönderildi.',
+  'user-updated': 'Kullanıcı izinleri güncellendi.',
+  'user-removed': 'Kullanıcı silindi.',
 }
 
 export default function ToastOnMount({ type, redirectTo = '/admin' }: { type?: string; redirectTo?: string }) {

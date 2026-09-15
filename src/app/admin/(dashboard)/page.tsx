@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Plus, FileText, CheckCircle2, PenLine } from 'lucide-react'
 import { listArticles } from '@/lib/articles'
+import { getCurrentUser } from '@/lib/permissions'
 import ToastOnMount from '@/components/ToastOnMount'
 
 export default async function AdminHomePage({
@@ -9,6 +10,7 @@ export default async function AdminHomePage({
   searchParams: Promise<{ toast?: string }>
 }) {
   const { toast } = await searchParams
+  const currentUser = await getCurrentUser()
   const articles = await listArticles()
   const publishedCount = articles.filter((a) => a.status === 'published').length
   const draftCount = articles.length - publishedCount
@@ -19,13 +21,15 @@ export default async function AdminHomePage({
 
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-slate-900">Yazılar</h1>
-        <Link
-          href="/admin/articles/new"
-          className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
-        >
-          <Plus className="h-4 w-4" />
-          Yeni Yazı
-        </Link>
+        {currentUser?.permissions.can_manage_articles && (
+          <Link
+            href="/admin/articles/new"
+            className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
+          >
+            <Plus className="h-4 w-4" />
+            Yeni Yazı
+          </Link>
+        )}
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-4">
