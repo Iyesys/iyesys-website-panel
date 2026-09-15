@@ -6,6 +6,7 @@ export type ManagedUser = {
   email: string
   created_at: string
   last_sign_in_at: string | null
+  status: 'pending' | 'active'
   permissions: Permissions
 }
 
@@ -24,13 +25,18 @@ export async function listUsers(): Promise<ManagedUser[]> {
   const profileById = new Map((profiles ?? []).map((p) => [p.id, p]))
 
   return userList.users
-    .map((user) => {
+    .map((user): ManagedUser => {
       const profile = profileById.get(user.id)
       return {
         id: user.id,
         email: user.email ?? '',
         created_at: user.created_at,
         last_sign_in_at: user.last_sign_in_at ?? null,
+        // Invited users can't sign in until they've clicked the email link
+        // and set a password. email_confirmed_at only flips once they do -
+        // that's a more reliable "did they actually finish" signal than
+        // last_sign_in_at, which some Supabase flows set on link-click.
+        status: user.email_confirmed_at ? 'active' : 'pending',
         permissions: {
           can_manage_articles: profile?.can_manage_articles ?? false,
           can_publish_articles: profile?.can_publish_articles ?? false,

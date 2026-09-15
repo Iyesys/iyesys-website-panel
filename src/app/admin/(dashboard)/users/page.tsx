@@ -51,7 +51,14 @@ export default async function UsersPage({
               className="flex items-center justify-between gap-4 p-4 hover:bg-slate-50"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-slate-900">{user.email}</p>
+                <div className="flex items-center gap-2">
+                  <p className="truncate text-sm font-medium text-slate-900">{user.email}</p>
+                  {user.status === 'pending' && (
+                    <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+                      Davet Bekliyor
+                    </span>
+                  )}
+                </div>
                 <p className="mt-0.5 text-xs text-slate-400">
                   {user.last_sign_in_at
                     ? `Son giriş: ${new Date(user.last_sign_in_at).toLocaleDateString('tr-TR')}`
