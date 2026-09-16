@@ -51,7 +51,7 @@ export default async function EditFaqPage({
                 name="question"
                 required
                 defaultValue={faq.question}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none"
               />
             </div>
 
@@ -62,7 +62,7 @@ export default async function EditFaqPage({
                 required
                 rows={5}
                 defaultValue={faq.answer}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none"
               />
             </div>
 
@@ -89,7 +89,11 @@ export default async function EditFaqPage({
               </div>
             </div>
 
-            <SubmitButton idleLabel="Kaydet" pendingLabel="Kaydediliyor…" />
+            <SubmitButton
+              idleLabel="Kaydet"
+              pendingLabel="Kaydediliyor…"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            />
           </form>
         ) : (
           <div className="space-y-4 text-sm text-slate-700">
