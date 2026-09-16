@@ -6,6 +6,7 @@ export type Permissions = {
   can_publish_articles: boolean
   can_delete_articles: boolean
   can_manage_users: boolean
+  can_manage_faqs: boolean
 }
 
 export const PERMISSION_DEFAULTS: Permissions = {
@@ -13,6 +14,7 @@ export const PERMISSION_DEFAULTS: Permissions = {
   can_publish_articles: true,
   can_delete_articles: false,
   can_manage_users: false,
+  can_manage_faqs: false,
 }
 
 export type CurrentUser = {
@@ -35,7 +37,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('can_manage_articles, can_publish_articles, can_delete_articles, can_manage_users')
+    .select('can_manage_articles, can_publish_articles, can_delete_articles, can_manage_users, can_manage_faqs')
     .eq('id', user.id)
     .maybeSingle()
 
@@ -47,6 +49,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
       can_publish_articles: false,
       can_delete_articles: false,
       can_manage_users: false,
+      can_manage_faqs: false,
     },
   }
 })

@@ -21,6 +21,11 @@ const PERMISSION_FIELDS: { key: keyof Permissions; label: string; description: s
     label: 'Kullanıcıları yönetebilir',
     description: 'Yeni kullanıcı davet edebilir, izinleri düzenleyebilir ve kullanıcı kaldırabilir.',
   },
+  {
+    key: 'can_manage_faqs',
+    label: 'SSS yönetebilir',
+    description: 'Sıkça sorulan soruları oluşturabilir, düzenleyebilir, sıralayabilir ve silebilir.',
+  },
 ]
 
 export default function PermissionCheckboxes({

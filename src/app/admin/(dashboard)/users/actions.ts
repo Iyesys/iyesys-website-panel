@@ -12,6 +12,7 @@ function readPermissions(formData: FormData): Permissions {
     can_publish_articles: formData.get('can_publish_articles') === 'on',
     can_delete_articles: formData.get('can_delete_articles') === 'on',
     can_manage_users: formData.get('can_manage_users') === 'on',
+    can_manage_faqs: formData.get('can_manage_faqs') === 'on',
   }
 }
 

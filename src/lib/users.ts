@@ -42,6 +42,7 @@ export async function listUsers(): Promise<ManagedUser[]> {
           can_publish_articles: profile?.can_publish_articles ?? false,
           can_delete_articles: profile?.can_delete_articles ?? false,
           can_manage_users: profile?.can_manage_users ?? false,
+          can_manage_faqs: profile?.can_manage_faqs ?? false,
         },
       }
     })

@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Newspaper, Settings, Users } from 'lucide-react'
+import { Newspaper, Settings, Users, HelpCircle } from 'lucide-react'
 
 export default function AdminSidebarNav({ showUsers }: { showUsers: boolean }) {
   const pathname = usePathname()
 
   const navItems = [
     { href: '/admin', label: 'Yazılar', icon: Newspaper },
+    { href: '/admin/faqs', label: 'SSS', icon: HelpCircle },
     ...(showUsers ? [{ href: '/admin/users', label: 'Kullanıcılar', icon: Users }] : []),
     { href: '/admin/settings', label: 'Ayarlar', icon: Settings },
   ]
