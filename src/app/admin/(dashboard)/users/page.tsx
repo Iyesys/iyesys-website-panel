@@ -10,6 +10,7 @@ const PERMISSION_LABELS: Record<keyof Permissions, string> = {
   can_publish_articles: 'Yayınlama',
   can_delete_articles: 'Silme',
   can_manage_users: 'Kullanıcı Yönetimi',
+  can_manage_faqs: 'SSS Yönetimi',
 }
 
 export default async function UsersPage({

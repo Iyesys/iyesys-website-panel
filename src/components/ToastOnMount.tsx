@@ -14,6 +14,9 @@ const MESSAGES: Record<string, string> = {
   'user-invited': 'Davet gönderildi.',
   'user-updated': 'Kullanıcı izinleri güncellendi.',
   'user-removed': 'Kullanıcı silindi.',
+  'faq-created': 'Soru eklendi.',
+  'faq-updated': 'Soru güncellendi.',
+  'faq-deleted': 'Soru silindi.',
 }
 
 export default function ToastOnMount({ type, redirectTo = '/admin' }: { type?: string; redirectTo?: string }) {
