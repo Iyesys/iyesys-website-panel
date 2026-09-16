@@ -20,7 +20,7 @@ export default async function FaqsPage({
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
             <HelpCircle className="h-5 w-5" />
           </div>
           <div>
@@ -33,7 +33,7 @@ export default async function FaqsPage({
         {currentUser?.permissions.can_manage_faqs && (
           <Link
             href="/admin/faqs/new"
-            className="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
             Yeni Soru
@@ -53,7 +53,7 @@ export default async function FaqsPage({
             <Link
               key={faq.id}
               href={`/admin/faqs/${faq.id}`}
-              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-indigo-200 hover:bg-indigo-50/40"
+              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:bg-slate-50"
             >
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-500">
                 {faq.sort_order}
