@@ -34,7 +34,7 @@ export default async function NewFaqPage({
             <input
               name="question"
               required
-              className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
+              className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none"
             />
           </div>
 
@@ -44,7 +44,7 @@ export default async function NewFaqPage({
               name="answer"
               required
               rows={5}
-              className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
+              className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none"
             />
           </div>
 
@@ -71,7 +71,11 @@ export default async function NewFaqPage({
             </div>
           </div>
 
-          <SubmitButton idleLabel="Kaydet" pendingLabel="Kaydediliyor…" />
+          <SubmitButton
+            idleLabel="Kaydet"
+            pendingLabel="Kaydediliyor…"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+          />
         </form>
       </div>
     </div>
