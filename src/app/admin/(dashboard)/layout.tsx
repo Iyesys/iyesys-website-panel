@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/permissions'
 import AdminSidebarNav from '@/components/AdminSidebarNav'
 import { signOut } from '../actions'
 import { LogOut } from 'lucide-react'
@@ -8,6 +9,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const currentUser = await getCurrentUser()
 
   const displayName = user?.user_metadata?.full_name || user?.email || ''
   const initials = displayName.slice(0, 2).toUpperCase()
@@ -20,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <p className="text-xs text-slate-400">Yönetim Paneli</p>
         </div>
 
-        <AdminSidebarNav />
+        <AdminSidebarNav showUsers={currentUser?.permissions.can_manage_users ?? false} />
 
         <div className="border-t border-slate-100 p-3">
           <div className="flex items-center gap-2.5 rounded-md px-2 py-2">

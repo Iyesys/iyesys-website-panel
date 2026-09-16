@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import ArticleForm from '@/components/ArticleForm'
 import DeleteArticleButton from '@/components/DeleteArticleButton'
 import { getArticleById } from '@/lib/articles'
+import { getCurrentUser } from '@/lib/permissions'
 import { updateArticleAction, deleteArticleAction } from '../actions'
 
 export default async function EditArticlePage({
@@ -15,6 +16,7 @@ export default async function EditArticlePage({
 }) {
   const { id } = await params
   const { error } = await searchParams
+  const currentUser = await getCurrentUser()
   const article = await getArticleById(id)
 
   if (!article) notFound()
@@ -33,7 +35,7 @@ export default async function EditArticlePage({
           Yazılara Dön
         </Link>
 
-        <DeleteArticleButton action={deleteWithId} />
+        {currentUser?.permissions.can_delete_articles && <DeleteArticleButton action={deleteWithId} />}
       </div>
 
       <h1 className="mt-4 text-xl font-bold text-slate-900">Yazıyı Düzenle</h1>

@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createArticle, updateArticle, deleteArticle, getArticleById, type ArticleStatus } from '@/lib/articles'
+import { getCurrentUser } from '@/lib/permissions'
 
 function readArticleInput(formData: FormData) {
   return {
@@ -16,10 +17,19 @@ function readArticleInput(formData: FormData) {
 }
 
 export async function createArticleAction(formData: FormData) {
+  const currentUser = await getCurrentUser()
+  if (!currentUser?.permissions.can_manage_articles) {
+    redirect(`/admin/articles/new?error=${encodeURIComponent('Yazı oluşturma yetkiniz yok')}`)
+  }
+
   const input = readArticleInput(formData)
 
   if (!input.title || !input.slug) {
     redirect(`/admin/articles/new?error=${encodeURIComponent('Başlık ve slug zorunlu')}`)
+  }
+
+  if (input.status === 'published' && !currentUser.permissions.can_publish_articles) {
+    redirect(`/admin/articles/new?error=${encodeURIComponent('Yayınlama yetkiniz yok')}`)
   }
 
   await createArticle(input)
@@ -28,6 +38,11 @@ export async function createArticleAction(formData: FormData) {
 }
 
 export async function updateArticleAction(id: string, formData: FormData) {
+  const currentUser = await getCurrentUser()
+  if (!currentUser?.permissions.can_manage_articles) {
+    redirect(`/admin/articles/${id}?error=${encodeURIComponent('Yazı düzenleme yetkiniz yok')}`)
+  }
+
   const input = readArticleInput(formData)
 
   if (!input.title || !input.slug) {
@@ -35,12 +50,22 @@ export async function updateArticleAction(id: string, formData: FormData) {
   }
 
   const existing = await getArticleById(id)
+
+  if (input.status === 'published' && existing?.status !== 'published' && !currentUser.permissions.can_publish_articles) {
+    redirect(`/admin/articles/${id}?error=${encodeURIComponent('Yayınlama yetkiniz yok')}`)
+  }
+
   await updateArticle(id, input, existing?.status === 'published')
   revalidatePath('/admin')
   redirect(`/admin?toast=${input.status === 'published' ? 'published' : 'updated'}`)
 }
 
 export async function deleteArticleAction(id: string) {
+  const currentUser = await getCurrentUser()
+  if (!currentUser?.permissions.can_delete_articles) {
+    redirect(`/admin/articles/${id}?error=${encodeURIComponent('Silme yetkiniz yok')}`)
+  }
+
   await deleteArticle(id)
   revalidatePath('/admin')
   redirect('/admin?toast=deleted')
