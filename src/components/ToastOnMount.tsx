@@ -17,6 +17,12 @@ const MESSAGES: Record<string, string> = {
   'faq-created': 'Soru eklendi.',
   'faq-updated': 'Soru güncellendi.',
   'faq-deleted': 'Soru silindi.',
+  'category-created': 'Kategori eklendi.',
+  'category-updated': 'Kategori güncellendi.',
+  'category-deleted': 'Kategori silindi.',
+  'item-created': 'Çözüm eklendi.',
+  'item-updated': 'Çözüm güncellendi.',
+  'item-deleted': 'Çözüm silindi.',
 }
 
 export default function ToastOnMount({ type, redirectTo = '/admin' }: { type?: string; redirectTo?: string }) {
