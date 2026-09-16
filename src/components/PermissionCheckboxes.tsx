@@ -26,6 +26,11 @@ const PERMISSION_FIELDS: { key: keyof Permissions; label: string; description: s
     label: 'SSS yönetebilir',
     description: 'Sıkça sorulan soruları oluşturabilir, düzenleyebilir, sıralayabilir ve silebilir.',
   },
+  {
+    key: 'can_manage_menu',
+    label: 'Menü yönetebilir',
+    description: 'Site menüsündeki kategorileri ve çözümleri oluşturabilir, düzenleyebilir, sıralayabilir ve silebilir.',
+  },
 ]
 
 export default function PermissionCheckboxes({
