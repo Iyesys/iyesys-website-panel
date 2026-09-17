@@ -5,26 +5,20 @@ import { ImageIcon, ImageUp, Loader2, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import SubmitButton from './SubmitButton'
 import { createClient } from '@/lib/supabase/client'
-import { slugify } from '@/lib/slugify'
 import type { MenuCategory, MenuItem } from '@/lib/menu'
 
 export default function MenuItemForm({
   action,
   categories,
   item,
-  defaultCategoryId,
   error,
 }: {
   action: (formData: FormData) => void
   categories: MenuCategory[]
-  item?: MenuItem
-  defaultCategoryId?: string
+  item: MenuItem
   error?: string
 }) {
-  const [title, setTitle] = useState(item?.title ?? '')
-  const [slug, setSlug] = useState(item?.slug ?? '')
-  const [slugTouched, setSlugTouched] = useState(Boolean(item))
-  const [imageUrl, setImageUrl] = useState(item?.image_url ?? '')
+  const [imageUrl, setImageUrl] = useState(item.image_url ?? '')
   const [imageUploading, setImageUploading] = useState(false)
   const [imageDragActive, setImageDragActive] = useState(false)
 
@@ -60,12 +54,9 @@ export default function MenuItemForm({
         <select
           name="category_id"
           required
-          defaultValue={item?.category_id ?? defaultCategoryId ?? ''}
+          defaultValue={item.category_id}
           className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
         >
-          <option value="" disabled>
-            Kategori seçin
-          </option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.label}
@@ -79,28 +70,19 @@ export default function MenuItemForm({
         <input
           name="title"
           required
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value)
-            if (!slugTouched) setSlug(slugify(e.target.value))
-          }}
+          defaultValue={item.title}
           className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700">Slug</label>
-        <input
-          name="slug"
-          required
-          value={slug}
-          onChange={(e) => {
-            setSlug(slugify(e.target.value))
-            setSlugTouched(true)
-          }}
-          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
-        />
-        <p className="mt-1 text-xs text-slate-400">/services/{slug || '...'}</p>
+        <label className="block text-sm font-medium text-slate-700">Sayfa Adresi</label>
+        <p className="mt-1 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+          /services/{item.slug}
+        </p>
+        <p className="mt-1 text-xs text-slate-400">
+          Bu sayfanın kodlanmış bağlantısı - buradan değiştirilemez.
+        </p>
       </div>
 
       <div>
@@ -108,7 +90,7 @@ export default function MenuItemForm({
         <textarea
           name="description"
           rows={3}
-          defaultValue={item?.description ?? ''}
+          defaultValue={item.description}
           className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
         />
       </div>
@@ -209,7 +191,7 @@ export default function MenuItemForm({
           <input
             name="sort_order"
             type="number"
-            defaultValue={item?.sort_order ?? 0}
+            defaultValue={item.sort_order}
             className="mt-1 w-24 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900"
           />
         </div>
@@ -217,7 +199,7 @@ export default function MenuItemForm({
           <label className="block text-sm font-medium text-slate-700">Durum</label>
           <select
             name="status"
-            defaultValue={item?.status ?? 'draft'}
+            defaultValue={item.status}
             className="mt-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-900"
           >
             <option value="draft">Taslak</option>

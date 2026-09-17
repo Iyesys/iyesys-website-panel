@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Plus, LayoutGrid } from 'lucide-react'
+import { DynamicIcon } from 'lucide-react/dynamic'
 import { listCategories, listItems } from '@/lib/menu'
 import { getCurrentUser } from '@/lib/permissions'
 import { MENU_THEME_OPTIONS } from '@/lib/menuThemes'
@@ -60,8 +61,19 @@ export default async function MenuPage({
                 className="overflow-hidden rounded-xl border border-slate-200 bg-white"
                 style={{ borderLeftWidth: 4, borderLeftColor: swatch }}
               >
-                <div className="flex items-center justify-between gap-4 p-4">
-                  <Link href={`/admin/menu/categories/${category.id}`} className="min-w-0 flex-1">
+                <Link
+                  href={`/admin/menu/categories/${category.id}`}
+                  className="flex items-center gap-3 p-4 hover:bg-slate-50"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                    <DynamicIcon
+                      // @ts-expect-error - free-text in the DB, validated against iconNames by the picker
+                      name={category.icon}
+                      className="h-4 w-4"
+                      fallback={() => <LayoutGrid className="h-4 w-4" />}
+                    />
+                  </span>
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <p className="truncate text-sm font-semibold text-slate-900">{category.label}</p>
                       <span
@@ -73,17 +85,8 @@ export default async function MenuPage({
                       </span>
                     </div>
                     <p className="mt-0.5 line-clamp-1 text-xs text-slate-400">{category.description}</p>
-                  </Link>
-                  {canManage && (
-                    <Link
-                      href={`/admin/menu/items/new?category=${category.id}`}
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-slate-200 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      Çözüm Ekle
-                    </Link>
-                  )}
-                </div>
+                  </div>
+                </Link>
 
                 {categoryItems.length > 0 && (
                   <div className="divide-y divide-slate-100 border-t border-slate-100">

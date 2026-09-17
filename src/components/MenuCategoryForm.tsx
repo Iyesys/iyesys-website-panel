@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import SubmitButton from './SubmitButton'
+import IconPicker from './IconPicker'
 import { slugify } from '@/lib/slugify'
 import { MENU_THEME_OPTIONS } from '@/lib/menuThemes'
 import type { MenuCategory } from '@/lib/menu'
@@ -73,6 +74,13 @@ export default function MenuCategoryForm({
           defaultValue={category?.description ?? ''}
           className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-slate-500 focus:outline-none"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700">İkon</label>
+        <div className="mt-2">
+          <IconPicker name="icon" defaultValue={category?.icon ?? 'shapes'} />
+        </div>
       </div>
 
       <div>
