@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ImageIcon, X } from 'lucide-react'
+import { ImageIcon, ImageUp, Loader2, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import SubmitButton from './SubmitButton'
 import { createClient } from '@/lib/supabase/client'
@@ -26,8 +26,14 @@ export default function MenuItemForm({
   const [slugTouched, setSlugTouched] = useState(Boolean(item))
   const [imageUrl, setImageUrl] = useState(item?.image_url ?? '')
   const [imageUploading, setImageUploading] = useState(false)
+  const [imageDragActive, setImageDragActive] = useState(false)
 
   async function handleImageUpload(file: File) {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Lütfen bir görsel dosyası seçin')
+      return
+    }
+
     setImageUploading(true)
     const supabase = createClient()
     const ext = file.name.split('.').pop()
@@ -108,35 +114,93 @@ export default function MenuItemForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700">Görsel</label>
+        <div className="flex items-baseline justify-between">
+          <label className="block text-sm font-medium text-slate-700">Görsel</label>
+          <span className="text-xs text-slate-400">PNG, JPG, WEBP · maks. 5MB · önerilen oran 16:9</span>
+        </div>
         <input type="hidden" name="image_url" value={imageUrl} />
-        {imageUrl ? (
-          <div className="relative mt-2 h-40 w-full overflow-hidden rounded-md border border-slate-200">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+
+        <div
+          className={`relative mt-2 aspect-video w-full overflow-hidden rounded-lg border transition-colors ${
+            imageDragActive ? 'border-slate-900 bg-slate-50' : 'border-slate-200 bg-slate-50'
+          }`}
+          onDragOver={(e) => {
+            e.preventDefault()
+            if (!imageUrl && !imageUploading) setImageDragActive(true)
+          }}
+          onDragLeave={() => setImageDragActive(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setImageDragActive(false)
+            const file = e.dataTransfer.files?.[0]
+            if (file && !imageUploading) handleImageUpload(file)
+          }}
+        >
+          {imageUrl && (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img src={imageUrl} alt="Görsel" className="h-full w-full object-cover" />
-            <button
-              type="button"
-              onClick={() => setImageUrl('')}
-              className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        ) : (
-          <label className="mt-2 flex h-32 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-slate-300 text-sm text-slate-500 hover:bg-slate-50">
-            <ImageIcon className="h-4 w-4" />
-            {imageUploading ? 'Yükleniyor…' : 'Görsel yükle'}
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/gif"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) handleImageUpload(file)
-              }}
-            />
-          </label>
-        )}
+          )}
+
+          {imageUrl && !imageUploading && (
+            <div className="absolute inset-0 flex items-end justify-end gap-2 bg-gradient-to-t from-black/55 via-black/0 to-black/0 p-3 opacity-0 transition-opacity hover:opacity-100">
+              <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-white/95 px-3 py-1.5 text-xs font-medium text-slate-900 shadow-sm hover:bg-white">
+                <ImageUp className="h-3.5 w-3.5" />
+                Değiştir
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) handleImageUpload(file)
+                  }}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => setImageUrl('')}
+                className="inline-flex items-center gap-1.5 rounded-md bg-white/95 px-3 py-1.5 text-xs font-medium text-red-600 shadow-sm hover:bg-white"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Kaldır
+              </button>
+            </div>
+          )}
+
+          {!imageUrl && (
+            <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 text-sm text-slate-500 hover:bg-slate-100/60">
+              {imageUploading ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                  <span>Yükleniyor…</span>
+                </>
+              ) : (
+                <>
+                  <ImageIcon className="h-6 w-6 text-slate-400" />
+                  <span>
+                    <span className="font-medium text-slate-700">Yüklemek için tıklayın</span> veya sürükleyip bırakın
+                  </span>
+                </>
+              )}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                className="hidden"
+                disabled={imageUploading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) handleImageUpload(file)
+                }}
+              />
+            </label>
+          )}
+
+          {imageUrl && imageUploading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+              <Loader2 className="h-6 w-6 animate-spin text-white" />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-6">
