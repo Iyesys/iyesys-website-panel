@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { Plus, LayoutGrid } from 'lucide-react'
-import { DynamicIcon } from 'lucide-react/dynamic'
 import { listCategories, listItems } from '@/lib/menu'
 import { getCurrentUser } from '@/lib/permissions'
 import { MENU_THEME_OPTIONS } from '@/lib/menuThemes'
 import ToastOnMount from '@/components/ToastOnMount'
+import CategoryIcon from '@/components/CategoryIcon'
 
 export default async function MenuPage({
   searchParams,
@@ -66,12 +66,7 @@ export default async function MenuPage({
                   className="flex items-center gap-3 p-4 hover:bg-slate-50"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-                    <DynamicIcon
-                      // @ts-expect-error - free-text in the DB, validated against iconNames by the picker
-                      name={category.icon}
-                      className="h-4 w-4"
-                      fallback={() => <LayoutGrid className="h-4 w-4" />}
-                    />
+                    <CategoryIcon name={category.icon} className="h-4 w-4" />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
