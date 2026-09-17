@@ -6,7 +6,6 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
-  createItem,
   updateItem,
   deleteItem,
   type MenuStatus,
@@ -21,15 +20,17 @@ function readCategoryInput(formData: FormData) {
     short_label: String(formData.get('short_label') ?? '').trim(),
     description: String(formData.get('description') ?? '').trim(),
     theme: (formData.get('theme') as MenuTheme) ?? 'blue',
+    icon: String(formData.get('icon') ?? '').trim() || 'shapes',
     sort_order: Number(formData.get('sort_order') ?? 0) || 0,
     status: (formData.get('status') as MenuStatus) ?? 'draft',
   }
 }
 
+// No slug here - it's the link to a hand-coded detail page and is never
+// edited from the panel, see the MenuItemInput comment in lib/menu.ts.
 function readItemInput(formData: FormData) {
   return {
     category_id: String(formData.get('category_id') ?? ''),
-    slug: String(formData.get('slug') ?? '').trim(),
     title: String(formData.get('title') ?? '').trim(),
     description: String(formData.get('description') ?? '').trim(),
     image_url: (formData.get('image_url') as string) || null,
@@ -79,28 +80,12 @@ export async function deleteCategoryAction(id: string) {
   redirect('/admin/menu?toast=category-deleted')
 }
 
-export async function createItemAction(formData: FormData) {
-  const categoryId = String(formData.get('category_id') ?? '')
-  await requireMenuManager(`/admin/menu/items/new?category=${categoryId}`)
-
-  const input = readItemInput(formData)
-  if (!input.slug || !input.title || !input.category_id) {
-    redirect(
-      `/admin/menu/items/new?category=${categoryId}&error=${encodeURIComponent('Slug, başlık ve kategori zorunlu')}`
-    )
-  }
-
-  await createItem(input)
-  revalidatePath('/admin/menu')
-  redirect('/admin/menu?toast=item-created')
-}
-
 export async function updateItemAction(id: string, formData: FormData) {
   await requireMenuManager(`/admin/menu/items/${id}`)
 
   const input = readItemInput(formData)
-  if (!input.slug || !input.title || !input.category_id) {
-    redirect(`/admin/menu/items/${id}?error=${encodeURIComponent('Slug, başlık ve kategori zorunlu')}`)
+  if (!input.title || !input.category_id) {
+    redirect(`/admin/menu/items/${id}?error=${encodeURIComponent('Başlık ve kategori zorunlu')}`)
   }
 
   await updateItem(id, input)

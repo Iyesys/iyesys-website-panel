@@ -10,6 +10,7 @@ export type MenuCategory = {
   short_label: string
   description: string
   theme: MenuTheme
+  icon: string
   sort_order: number
   status: MenuStatus
   created_at: string
@@ -22,6 +23,7 @@ export type MenuCategoryInput = {
   short_label: string
   description: string
   theme: MenuTheme
+  icon: string
   sort_order: number
   status: MenuStatus
 }
@@ -39,9 +41,11 @@ export type MenuItem = {
   updated_at: string
 }
 
+// Slug is intentionally excluded: it's the link to a hand-coded detail
+// page, so it's set once (via migration, alongside the page itself) and
+// never edited from the panel - only category/order/status/copy are.
 export type MenuItemInput = {
   category_id: string
-  slug: string
   title: string
   description: string
   image_url: string | null
@@ -121,14 +125,6 @@ export async function listItemsByCategory(categoryId: string): Promise<MenuItem[
 export async function getItemById(id: string): Promise<MenuItem | null> {
   const supabase = await createClient()
   const { data, error } = await supabase.from('menu_items').select('*').eq('id', id).maybeSingle()
-
-  if (error) throw error
-  return data
-}
-
-export async function createItem(input: MenuItemInput): Promise<MenuItem> {
-  const supabase = await createClient()
-  const { data, error } = await supabase.from('menu_items').insert(input).select().single()
 
   if (error) throw error
   return data
