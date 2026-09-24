@@ -39,7 +39,7 @@ export async function inviteUserAction(formData: FormData) {
   const origin = headerList.get('origin') ?? `https://${headerList.get('host')}`
 
   try {
-    await inviteUser(email, permissions, `${origin}/admin/auth/confirm`)
+    await inviteUser(email, permissions, `${origin}/admin/auth/invite`)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Davet gönderilemedi'
     redirect(`/admin/users/new?error=${encodeURIComponent(message)}`)
