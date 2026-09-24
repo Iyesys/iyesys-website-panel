@@ -4,21 +4,29 @@ import { setNewPasswordAction } from './actions'
 export default async function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>
+  searchParams: Promise<{ error?: string; invite?: string }>
 }) {
-  const { error } = await searchParams
+  const { error, invite } = await searchParams
+  const isInvite = invite === '1'
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h1 className="text-xl font-bold text-slate-900">Yeni Şifre Belirle</h1>
-        <p className="mt-1 text-sm text-slate-500">Hesabınız için yeni bir şifre girin.</p>
+        <h1 className="text-xl font-bold text-slate-900">
+          {isInvite ? "IYESYS Panel'e Hoş Geldiniz" : 'Yeni Şifre Belirle'}
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          {isInvite
+            ? 'Hesabınızı etkinleştirmek için bir şifre belirleyin. Ardından profil ayarlarınızı düzenleyebilirsiniz.'
+            : 'Hesabınız için yeni bir şifre girin.'}
+        </p>
 
         {error && (
           <div className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">{error}</div>
         )}
 
         <form action={setNewPasswordAction} className="mt-6 space-y-4">
+          {isInvite && <input type="hidden" name="invite" value="1" />}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-slate-700">
               Yeni Şifre
